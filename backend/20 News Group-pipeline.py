@@ -1,34 +1,33 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Data Cleaning and ML
 
-# Download Data
-from sklearn.datasets import fetch_20newsgroups
+from abc import ABCMeta, abstractmethod
+
+import numpy as np
+import spacy
+from gensim.corpora.dictionary import Dictionary
+from gensim.matutils import Sparse2Corpus
+from gensim.models import Doc2Vec, LdaModel
+from gensim.models.phrases import Phrases
+from gensim.models.tfidfmodel import TfidfModel
 from nltk import download
-download('stopwords')
-download('punkt')
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize, word_tokenize
-from sklearn.feature_extraction.text import CountVectorizer
-from abc import ABCMeta, abstractmethod
-from sklearn.feature_extraction.text import TfidfTransformer
-from gensim.matutils import Sparse2Corpus
-from gensim.models import LdaModel
-import spacy
-from gensim.models.phrases import Phrases
-from gensim.corpora.dictionary import Dictionary
-from gensim.models.tfidfmodel import TfidfModel
-from sklearn.cluster import KMeans
-import numpy as np
-from spacy.tokenizer import Tokenizer
+from sklearn.cluster import KMeans, MiniBatchKMeans
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics import adjusted_rand_score
-from gensim.models import Doc2Vec
+from spacy.tokenizer import Tokenizer
+
+download('stopwords')
+download('punkt')
 
 # ## Preprocessing Classes
 
 class Preprocess(metaclass=ABCMeta):
     def __init__(self, ngramCount=1):
+        pass
 
     @abstractmethod
     def preprocess(self, data):
@@ -39,7 +38,7 @@ class NLTKPreProcess(Preprocess):
         Preprocess.__init__(self, ngramCount)
         self.stop = set(stopwords.words('english'))
         self.max_df = .5
-        self.min_df = 5
+        self.min_df = 1
         self.ngram_range = (1, ngramCount)
 
     def filterWords(self, word):
@@ -62,7 +61,7 @@ class SpacyPreprocess(Preprocess):
         Preprocess.__init__(self, ngramCount)
         self.stop = set(stopwords.words('english'))
         self.max_df = .5
-        self.min_df = 5
+        self.min_df = 1
         self.ngram_range = (1, ngramCount)
         self.nlp = spacy.load("en", disable=['tagger', 'parser', 'ner', 'textcat'])
         self.addStopWords([])
@@ -91,7 +90,7 @@ class SpacyPreprocess(Preprocess):
         return list(map(self.convertWords, filter(self.filterWords, docTokens)))
 
 def trainLDA(docRep, dictionary):
-    ldamodel = LdaModel(Sparse2Corpus(docRep), num_topics=20, id2word=id2word)
+    ldamodel = LdaModel(Sparse2Corpus(docRep), num_topics=20, id2word=dictionary)
 
 def convertToDoc2Vec(bow, id2word, labels):
     doc2VecData = []
@@ -112,20 +111,21 @@ def clusterData(clusterData, labels):
     print(score)
 
 def clusterDataMiniBatch(clusterData, labels):
-    kmeans = MiniBatchKMeans(n_clusters=true_k, init='k-means++', n_init=1,
-                         init_size=1000, batch_size=1000, verbose=opts.verbose).fit(clusterData)
+    kmeans = MiniBatchKMeans(n_clusters=20).fit(clusterData)
     score = adjusted_rand_score(kmeans.labels_, labels)
     print(score)
 
 def main():
+    dataSize = 100
+
     newsTrain = fetch_20newsgroups(subset='train', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
     newsTest = fetch_20newsgroups(subset='test', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
     preprocess = NLTKPreProcess() # SpacyPreprocess()
-    bow, tfidf, id2word = preprocess.preprocess(newsTrain[:10])
+    bow, tfidf, id2word = preprocess.preprocess(newsTrain.data[:dataSize])
     ldaModelBOW = trainLDA(bow, id2word)
     ldaModelTFIDF = trainLDA(tfidf, id2word)
-    clusterData(bow, newsTrain.target)
-    clusterData(tfidf, newsTrain.target)
+    clusterData(bow, newsTrain.target[:dataSize])
+    clusterData(tfidf, newsTrain.target[:dataSize])
 
 if __name__ == "__main__":
     # execute only if run as a script

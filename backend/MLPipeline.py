@@ -2,18 +2,17 @@
 # coding: utf-8
 
 
+import pickle
 from abc import ABCMeta, abstractmethod
 
 import numpy as np
-import pickle
 import spacy
 from gensim.corpora.dictionary import Dictionary
 from gensim.matutils import Sparse2Corpus
 from gensim.models import Doc2Vec, LdaModel
 from gensim.models.phrases import Phrases
 from gensim.models.tfidfmodel import TfidfModel
-from gensim.test.utils import datapath
-from gensim.test.utils import get_tmpfile
+from gensim.test.utils import datapath, get_tmpfile
 from nltk import download
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize, word_tokenize
@@ -98,7 +97,7 @@ def trainLDA(docRep, dictionary, save=False):
     ldamodel = LdaModel(Sparse2Corpus(docRep), num_topics=20, id2word=dictionary)
     if save:
         tempFile = datapath("../results/ldaModel")
-        lda.save(tempFile) # To load the model use: lda = LdaModel.load(temp_file)
+        ldamodel.save(tempFile) # To load the model use: lda = LdaModel.load(temp_file)
     return ldamodel
 
 def convertToDoc2Vec(bow, id2word, labels):
@@ -124,7 +123,7 @@ def clusterData(clusterData, labels, save=False):
         pickleData(kmeans.labels_, "kmeans")
     return adjusted_rand_score(kmeans.labels_, labels)
 
-def clusterDataMiniBatch(clusterData, labels):
+def clusterDataMiniBatch(clusterData, labels, save=False):
     ''' Run minibatch kmeans on given data for faster performance '''
     kmeans = MiniBatchKMeans(n_clusters=20).fit(clusterData)
     if save:
@@ -132,8 +131,12 @@ def clusterDataMiniBatch(clusterData, labels):
     return adjusted_rand_score(kmeans.labels_, labels)
 
 def pickleData(data, fName):
-    with open(fName + '.pkl', 'wb') as f:
-            pickle.dump(data, f)
+    with open("../results/" + fName + '.pkl', 'wb') as f:
+        pickle.dump(data, f)
+
+def loadData(data, fName):
+    with open("../results/" + fName + '.pkl', 'rb') as f:
+        return pickle.load(f)
 
 def main():
     dataSize = 100
@@ -141,7 +144,7 @@ def main():
     newsTrain = fetch_20newsgroups(subset='train', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
     newsTest = fetch_20newsgroups(subset='test', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
     preprocess = NLTKPreProcess() # SpacyPreprocess()
-    bow, tfidf, id2word = preprocess.preprocess(newsTrain.data[:dataSize])
+    bow, tfidf, id2word = preprocess.preprocess(newsTrain.data[:dataSize], True)
     ldaModelBOW = trainLDA(bow, id2word)
     ldaModelTFIDF = trainLDA(tfidf, id2word)
     clusterData(bow, newsTrain.target[:dataSize])

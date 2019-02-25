@@ -62,11 +62,8 @@ def loadData(fName):
 
 def main():
     dataSize = 100
-
-    newsTrain = fetch_20newsgroups(subset='train', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
-    newsTest = fetch_20newsgroups(subset='test', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
-    preprocess = NLTKPreProcess() # SpacyPreprocess()
-    bow, tfidf, id2word = preprocess.preprocess(newsTrain.data[:dataSize], True)
+    
+    bow, tfidf, id2word = loadData("preprocess")
     ldaModelBOW = trainLDA(bow, id2word)
     ldaModelTFIDF = trainLDA(tfidf, id2word)
     clusterData(bow, newsTrain.target[:dataSize])

@@ -98,7 +98,7 @@ def main():
     newsTrain = fetch_20newsgroups(subset='train', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
     newsTest = fetch_20newsgroups(subset='test', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
     preprocess = NLTKPreProcess() # SpacyPreprocess()
-    bow, tfidf, id2word = loadData("preprocess")
+    bow, tfidf, id2word = preprocess.preprocess(newsTrain.data[:dataSize], True)
 
 if __name__ == "__main__":
     # execute only if run as a script

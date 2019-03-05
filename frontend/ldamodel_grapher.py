@@ -18,7 +18,7 @@ import pandas as pd
     
 from utils import load_data
 
-# Takes ldamodel, id2word, and document representations (ie. bow, tfidf)
+# Takes docRepName (used to name output files), ldamodel, docRep as corpus (NOT sparse), and dictionary (must be gensim Dictionary type)
 
 # Still would be nice: some sort of labeling for topics, to make t-SNE graph interactive
 # This can be some separate array of strings where row number = doc, and value = doc's descriptor (maybe subject line?)
@@ -107,7 +107,7 @@ def main():
     
     bow, tfidf, id2word = load_data('../results/preprocess.pkl')
     
-    for (docRep, docRepName) in [(bow,'bow'), (tfidf,'tfidf')]:    
+    for (docRep, docRepName) in [(bow,'bow'), (tfidf,'tfidf')]:
         ldamodel = LdaModel.load('../results/ldamodel-' + docRepName)
         corpus = Sparse2Corpus(docRep, documents_columns=False)
         dictionary = Dictionary.from_corpus(corpus, id2word)

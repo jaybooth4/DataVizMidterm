@@ -66,8 +66,8 @@ def main():
     bow, tfidf, id2word = loadData("preprocess")
     ldaModelBOW = trainLDA(bow, id2word, True, 'ldamodel-bow')
     ldaModelTFIDF = trainLDA(tfidf, id2word, True, 'ldamodel-tfidf')
-#     clusterData(bow, newsTrain.target[:dataSize])
-#     clusterData(tfidf, newsTrain.target[:dataSize])
+    clusterData(bow, newsTrain.target[:dataSize])
+    clusterData(tfidf, newsTrain.target[:dataSize])
 
 if __name__ == "__main__":
     # execute only if run as a script

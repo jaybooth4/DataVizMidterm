@@ -14,11 +14,11 @@ from utils import load_data
 #     'term-frequency': random_term_frequency,
 #     'importance': random_importance
 # })
-# with open('../backendOutput/term-frequency-vs-importance.pkl', 'wb') as f:
+# with open('../results/term-frequency-vs-importance.pkl', 'wb') as f:
 #     pickle.dump(term_frequency_vs_importance_df, f)
 
-class TermFrequencyVsImportanceGrapher(Grapher):
-    def graph(self, fileNameIn='term-frequency-vs-importance', fileNameOut='../results/term-frequency-vs-importance.html'):
+class TermFrequencyVsImportanceGrapher:
+    def graph(self, fileNameIn='../results/term-frequency-vs-importance.pkl', fileNameOut='../results/term-frequency-vs-importance.html'):
         
         term_frequency_vs_importance_df = load_data(fileNameIn)
 
@@ -37,8 +37,7 @@ class TermFrequencyVsImportanceGrapher(Grapher):
         fig = go.Figure(data=[trace], layout=layout)
 
         offline.plot(fig, filename=fileNameOut)
-        
-# How this should be graphed:
+
 def main():
     grapher = TermFrequencyVsImportanceGrapher()
     grapher.graph()

@@ -5,5 +5,5 @@
 import pickle
 
 def load_data(fName):
-    with open("../backendOutput/" + fName + '.pkl', 'rb') as f:
+    with open(fName, 'rb') as f:
         return pickle.load(f)

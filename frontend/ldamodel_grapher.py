@@ -25,12 +25,12 @@ from utils import load_data
 # We could then pass that in to the t-SNE graph as a hover
 class LDAGrapher:
     
-    def __init__(self, docRep, docRepName, id2word, ldamodel):
-        self.docRep = docRep
+    def __init__(self, docRepName, corpus, dictionary, ldamodel):
         self.outPrefix = '../results/ldamodel-' + docRepName
+      
         self.ldamodel = ldamodel
-        self.corpus = Sparse2Corpus(docRep)#, document_columns=False)
-        self.dictionary = Dictionary.from_corpus(self.corpus, id2word)
+        self.corpus = corpus
+        self.dictionary = dictionary
 
     
     def graphPyLDAvis(self):
@@ -39,7 +39,8 @@ class LDAGrapher:
         pyLDAvis.save_html(p, output_file);
 
 
-    def graphTSNE(self):
+    def graphTSNE(self, perplexity=20):
+        ''' Runs t-SNE on document representations, then graphs groupings ''' 
         output_file(self.outPrefix + '-tsne.html')
         
         # fit ldamodel so that it's size (num documents) x (num topics)
@@ -52,7 +53,7 @@ class LDAGrapher:
 
         ldamodel_np = np.array(ldamodel_fitted)
 
-        tsne = TSNE(perplexity=20, random_state=2017)
+        tsne = TSNE(perplexity=20)
         tsne_embedding = tsne.fit_transform(ldamodel_np)
         tsne_embedding = pd.DataFrame(tsne_embedding, columns=['x','y'])
         tsne_embedding['hue'] = ldamodel_np.argmax(axis=1)
@@ -108,10 +109,13 @@ def main():
     
     for (docRep, docRepName) in [(bow,'bow'), (tfidf,'tfidf')]:    
         ldamodel = LdaModel.load('../results/ldamodel-' + docRepName)
-        grapher = LDAGrapher(docRep, docRepName, id2word, ldamodel) 
+        corpus = Sparse2Corpus(docRep, documents_columns=False)
+        dictionary = Dictionary.from_corpus(corpus, id2word)
+        
+        grapher = LDAGrapher(docRepName, corpus, dictionary, ldamodel) 
         
         print("Graphing t-SNE for " + docRepName + "...")
-        grapher.graphTSNE()
+        grapher.graphTSNE(perplexity=30)
         print("Graphing pyLDAvis for " + docRepName + "...")
         grapher.graphPyLDAvis()
         print("Creating word cloud for " + docRepName + "...")

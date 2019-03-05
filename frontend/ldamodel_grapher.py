@@ -19,18 +19,16 @@ import pandas as pd
 from utils import load_data
 
 # Takes ldamodel, id2word, and document representations (ie. bow, tfidf)
-# Assumes ldamodel is named '../results/ldamodel-bow' and/or '../results/ldamodel-tfidf'
-# Takes bow, tfidf, and id2word from '../results/preprocess.pkl'
 
 # Still would be nice: some sort of labeling for topics, to make t-SNE graph interactive
 # This can be some separate array of strings where row number = doc, and value = doc's descriptor (maybe subject line?)
 # We could then pass that in to the t-SNE graph as a hover
 class LDAGrapher:
     
-    def __init__(self, docRep, docRepName, id2word):
+    def __init__(self, docRep, docRepName, id2word, ldamodel):
         self.docRep = docRep
-        self.outPrefix = '../results/ldamodel-' + docRepName;
-        self.ldamodel = LdaModel.load('../results/ldamodel-' + docRepName)
+        self.outPrefix = '../results/ldamodel-' + docRepName
+        self.ldamodel = ldamodel
         self.corpus = Sparse2Corpus(docRep)#, document_columns=False)
         self.dictionary = Dictionary.from_corpus(self.corpus, id2word)
 
@@ -109,7 +107,8 @@ def main():
     bow, tfidf, id2word = load_data('../results/preprocess.pkl')
     
     for (docRep, docRepName) in [(bow,'bow'), (tfidf,'tfidf')]:    
-        grapher = LDAGrapher(docRep, docRepName, id2word) 
+        ldamodel = LdaModel.load('../results/ldamodel-' + docRepName)
+        grapher = LDAGrapher(docRep, docRepName, id2word, ldamodel) 
         
         print("Graphing t-SNE for " + docRepName + "...")
         grapher.graphTSNE()

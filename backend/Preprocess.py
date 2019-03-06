@@ -43,6 +43,7 @@ class NLTKPreProcess(Preprocess):
 
     def preprocess(self, data, save=False):
         nltkCountVectorizer = CountVectorizer(tokenizer=self.customTokenizer, ngram_range=self.ngram_range, max_df=self.max_df, min_df=self.min_df)
+        
         bow = nltkCountVectorizer.fit_transform(data)
         tfidf = TfidfTransformer().fit_transform(bow)
         id2word = dict((id, word) for word, id in nltkCountVectorizer.vocabulary_.items())

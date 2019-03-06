@@ -1,7 +1,5 @@
 from gensim.matutils import Sparse2Corpus, corpus2dense
 from sklearn.decomposition import PCA
-from gensim.corpora import Dictionary
-from sklearn.manifold import TSNE
 from bokeh.models import ColumnDataSource
 from bokeh.palettes import all_palettes
 from bokeh.plotting import figure, show
@@ -59,16 +57,16 @@ def main():
     num_terms = 5000
     num_docs = 100
     
-    for (docRep, docRepName) in [(bow,'bow'), (tfidf,'tfidf')]:
+    for (doc_rep, doc_rep_name) in [(bow,'bow'), (tfidf,'tfidf')]:
        
-        kmeans_labels = load_data('../results/kmeans-' + docRepName + '.pkl')
+        kmeans_labels = load_data('../results/kmeans-' + doc_rep_name + '.pkl')
     
-        corpus = Sparse2Corpus(docRep, documents_columns=False)
+        corpus = Sparse2Corpus(doc_rep, documents_columns=False)
         dense = np.matrix.transpose(corpus2dense(corpus, num_terms=num_terms, num_docs=num_docs))
 
-        grapher = KMeansClusteringGrapher(docRepName, num_docs, num_terms, dense, kmeans_labels) 
+        grapher = KMeansClusteringGrapher(doc_rep_name, num_docs, num_terms, dense, kmeans_labels) 
         
-        print("Graphing clustering for docRep: " + str(docRepName) + "...")
+        print("Graphing clustering for docRep: " + str(doc_rep_name) + "...")
         grapher.graph()
 
     print("Done graphing!")

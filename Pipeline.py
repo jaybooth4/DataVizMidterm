@@ -1,17 +1,15 @@
-from ml import *
-from preprocess import *
+from backend.Preprocess import preprocess
 import argparse
 
 def main():    
-    parser = argparse.ArgumentParser(description = 'Data Visualization Project Pipeline',formatter_class=argparse.ArgumentDefaultsHelpFormatter)    
-    parser.add_argument('data', default="100", help='Size of the data to read in') 
-    parser.add_argument('preprocess', default="NLTK", help='Type of preprocessing to run on data', choices=['Spacy', 'NLTK', 'None'])
-    parser.add_argument('save', default="NLTK", help='If results of pipeline should be saved')
-    args = parser.parse_args()
+    corpus = preprocess("NLTK", 100)
+    print(corpus[:5])
+    # parser = argparse.ArgumentParser(description = 'Data Visualization Project Pipeline',formatter_class=argparse.ArgumentDefaultsHelpFormatter)    
+    # parser.add_argument('data', default="100", help='Size of the data to read in') 
+    # parser.add_argument('preprocess', default="NLTK", help='Type of preprocessing to run on data', choices=['Spacy', 'NLTK', 'None'])
+    # parser.add_argument('save', default="NLTK", help='If results of pipeline should be saved')
+    # args = parser.parse_args()
 
-
-    preprocessObj = preprocess.preprocess(args.preprocess)
-    preprocessObj.preprocess(args.preprocess)
 
     # bow, tfidf, id2word = loadData("preprocess")
     # ldaModelBOW = trainLDA(bow, id2word)

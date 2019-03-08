@@ -16,11 +16,14 @@ from sklearn.metrics import adjusted_rand_score
 
 def trainLDA(docRep, dictionary, save=False, name='ldamodel'):
     ''' Function to train and return an ldamodel. Expects a sparse matrix as input '''
-    ldamodel = LdaModel(Sparse2Corpus(docRep), num_topics=20, id2word=dictionary)
+    ldamodel = LdaModel(Sparse2Corpus(docRep),
+                        num_topics=20, id2word=dictionary)
     if save:
-        tempFile = "../results/" + name;
-        ldamodel.save(tempFile) # To load the model use: lda = LdaModel.load(temp_file)
+        tempFile = "../results/" + name
+        # To load the model use: lda = LdaModel.load(temp_file)
+        ldamodel.save(tempFile)
     return ldamodel
+
 
 def convertToDoc2Vec(bow, id2word, labels):
     ''' Function to convert data to proper format for Doc2Vec '''
@@ -28,6 +31,7 @@ def convertToDoc2Vec(bow, id2word, labels):
     for docIndex, doc in enumerate(bow):
         doc2VecData.append(([id2word.get(id) for id in doc], labels[docIndex]))
     return doc2VecData
+
 
 def trainDoc2Vec(data, save=False):
     ''' Train a Doc2Vec model '''
@@ -38,6 +42,7 @@ def trainDoc2Vec(data, save=False):
         model.save(fname)
     return model
 
+
 def clusterData(clusterData, labels, save=False):
     ''' Run kmeans on given data '''
     kmeans = KMeans(n_clusters=20).fit(clusterData)
@@ -45,16 +50,10 @@ def clusterData(clusterData, labels, save=False):
         pickleData(kmeans.labels_, "kmeans")
     return adjusted_rand_score(kmeans.labels_, labels)
 
+
 def clusterDataMiniBatch(clusterData, labels, save=False):
     ''' Run minibatch kmeans on given data for faster performance '''
     kmeans = MiniBatchKMeans(n_clusters=20).fit(clusterData)
     if save:
         pickleData(kmeans.labels_, "mbKmeans")
     return adjusted_rand_score(kmeans.labels_, labels)
-
-def pickleData(data, fName):
-    with open("../results/" + fName + '.pkl', 'wb') as f:
-        pickle.dump(data, f)
-
-def loadData(fName):
-    with open("../results/" + fName + '.pkl', 'rb') as f:

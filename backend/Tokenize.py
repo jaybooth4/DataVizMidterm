@@ -1,72 +1,57 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import pickle
 from abc import ABCMeta, abstractmethod
 
 import spacy
 from nltk import download
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize, word_tokenize
-from sklearn.cluster import KMeans, MiniBatchKMeans
-from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from spacy.tokenizer import Tokenizer
 
-download('stopwords')
-download('punkt')
+# download('stopwords')
+# download('punkt')
 
 # Preprocessing Base Class
 class Preprocess(metaclass=ABCMeta):
-    def __init__(self, ngramCount=1, min_df=1, max_df=.5):
-        self.ngram_range = (1, ngramCount)
-        self.max_df = max_df
-        self.min_df = min_df
+    def __init__(self, useNgram=False, minDf=1, maxDf=.5):
+        self.useNgram = useNgram
+        self.minDf = minDf
+        self.maxDf = maxDf
 
     @abstractmethod
-    def preprocess(self, data):
+    def tokenize(self, data):
+        pass
+
+    @abstractmethod
+    def addStopWords(self, stopWords):
         pass
 
 # Preprocessor using NLTK
-class NLTKPreProcess(Preprocess):
-    def __init__(self, ngramCount=1, max_df=.5, min_df=1):
-        Preprocess.__init__(self, ngramCount, min_df, max_df)
+class NLTKPreprocess(Preprocess):
+    def __init__(self, useNgram=False, minDf=1, maxDf=.5):
+        Preprocess.__init__(self, useNgram, minDf, maxDf)
         self.stop = set(stopwords.words('english'))
+
+
+    def addStopWords(self, stopWords):
+        for stopWord in stopWords:
+            self.stop.add(stopWord)
 
     def filterWords(self, word):
         return word not in self.stop and word.isalpha()
 
-    def customTokenizer(self, doc):
+    def tokenize(self, doc):
         words = [word for sentence in sent_tokenize(doc) for word in word_tokenize(sentence)]
         return(list(filter(lambda word: self.filterWords(word), words)))
-
-    def preprocess(self, data, save=False):
-        nltkCountVectorizer = CountVectorizer(tokenizer=self.customTokenizer, ngram_range=self.ngram_range, max_df=self.max_df, min_df=self.min_df)
-        
-        bow = nltkCountVectorizer.fit_transform(data)
-        tfidf = TfidfTransformer().fit_transform(bow)
-        id2word = dict((id, word) for word, id in nltkCountVectorizer.vocabulary_.items())
-        if save:
-            pickleData([bow, tfidf, id2word], "preprocess")
-        return bow, tfidf, id2word
 
 
 # Preprocessor using Spacy
 class SpacyPreprocess(Preprocess):
-    def __init__(self, ngramCount=1, max_df=.5, min_df=1):
-        Preprocess.__init__(self, ngramCount, max_df, min_df)
-        self.stop = set(stopwords.words('english'))
+    def __init__(self, ngramCount=1, minDf=1, maxDf=.5):
+        Preprocess.__init__(self, ngramCount, maxDf, minDf)
         self.nlp = spacy.load("en", disable=['tagger', 'parser', 'ner', 'textcat'])
-        self.addStopWords([])
         self.tokenizer = Tokenizer(self.nlp.vocab)
-
-    def preprocess(self, data, save=False):            
-        spacyCountVectorizer = CountVectorizer(tokenizer=self.customTokenizer, ngram_range=self.ngram_range, max_df=self.max_df, min_df=self.min_df)
-        bow = spacyCountVectorizer.fit_transform(data)
-        tfidf = TfidfTransformer().fit_transform(bow)
-        id2word = dict((id, word) for word, id in spacyCountVectorizer.vocabulary_.items())
-        if save:
-            pickleData([bow, tfidf, id2word], "preprocess")
-        return bow, tfidf, id2word
 
     def addStopWords(self, stopWords):
         for stopWord in stopWords:
@@ -79,7 +64,14 @@ class SpacyPreprocess(Preprocess):
     def convertWords(self, word):
         return word.lemma_.lower()
 
-    def customTokenizer(self, doc):
+    def tokenize(self, doc):
         docTokens = self.tokenizer(doc)
         return list(map(self.convertWords, filter(self.filterWords, docTokens)))
 
+def tokenizerFactory(tokenizerType, ngramCount=1, minDf=1, maxDf=.5):
+    if tokenizerType == "NLTK":
+        return NLTKPreprocess(ngramCount, minDf, maxDf)
+    elif tokenizerType == "SPACY":
+        return SpacyPreprocess(ngramCount, minDf, maxDf)
+    else:
+        raise NameError("Unsupported tokenizer type.")

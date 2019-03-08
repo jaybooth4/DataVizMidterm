@@ -1,0 +1,11 @@
+Possible flags:
+
+Tokenizing:
+    - include headers?
+    - data size
+    - stopwords
+    - n-gram
+    - min/max docFreq
+
+Preprocessing:
+    - 

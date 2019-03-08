@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 import pickle
 from abc import ABCMeta, abstractmethod
 
@@ -10,7 +9,6 @@ from nltk import download
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize, word_tokenize
 from sklearn.cluster import KMeans, MiniBatchKMeans
-from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from spacy.tokenizer import Tokenizer
 
@@ -84,22 +82,3 @@ class SpacyPreprocess(Preprocess):
         docTokens = self.tokenizer(doc)
         return list(map(self.convertWords, filter(self.filterWords, docTokens)))
 
-def pickleData(data, fName):
-    with open("../results/" + fName + '.pkl', 'wb') as f:
-        pickle.dump(data, f)
-
-def loadData(fName):
-    with open("../results/" + fName + '.pkl', 'rb') as f:
-        return pickle.load(f)
-
-def main():
-    dataSize = 100
-
-    newsTrain = fetch_20newsgroups(subset='train', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
-    newsTest = fetch_20newsgroups(subset='test', remove=('headers', 'footers', 'quotes'), download_if_missing=True)
-    preprocess = NLTKPreProcess() # SpacyPreprocess()
-    bow, tfidf, id2word = preprocess.preprocess(newsTrain.data[:dataSize], True)
-
-if __name__ == "__main__":
-    # execute only if run as a script
-    main()

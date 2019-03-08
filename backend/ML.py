@@ -59,16 +59,3 @@ def pickleData(data, fName):
 def loadData(fName):
     with open("../results/" + fName + '.pkl', 'rb') as f:
         return pickle.load(f)
-
-def main():
-    dataSize = 100
-    
-    bow, tfidf, id2word = loadData("preprocess")
-    ldaModelBOW = trainLDA(bow, id2word)
-    ldaModelTFIDF = trainLDA(tfidf, id2word)
-    clusterData(bow, newsTrain.target[:dataSize])
-    clusterData(tfidf, newsTrain.target[:dataSize])
-
-if __name__ == "__main__":
-    # execute only if run as a script
-    main()

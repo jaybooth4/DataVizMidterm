@@ -1,31 +1,50 @@
+from collections import Counter
+from .Util import parallelizeData
+import uuid 
+import math
+from operator import add
 
 
-def bagOfWords(rdd, tokenizer):
-    return rdd.mapValues(lambda doc: tokenizer.tokenize(doc)).mapValues(lambda tokens: Counter(tokens))
+def bagOfWordsFormat(dataRdd):
+    return dataRdd.map(lambda tokens: list(Counter(tokens).items()))
 
 def termFrequency(rdd):
-    return rdd.flatMap(lambda (fileName, text): text.split()) \
-        .map(lambda word: (toLowerCase(stripNonAlpha(word)), 1)) \
-        .filter(lambda (word, count): word is not "") \
+    return rdd.flatMap(lambda tokens: tokens) \
+        .map(lambda word: (word, 1)) \
         .reduceByKey(add)
 
+def documentFrequency(rdd):
+    return rdd.map(lambda doc: (str(uuid.uuid4()), doc))\
+                    .flatMapValues(lambda doc: doc)\
+                    .distinct() \
+                    .map(lambda entry: (entry[1], 1.0)) \
+                    .reduceByKey(add)
 
-def documentFrequency(rdd, maxFreq, minFreq):
-    fileCount = rdd.count()
-    return rdd.flatMapValues(lambda text: text.split()) \
-        .map(lambda (fileName, word): (fileName, toLowerCase(stripNonAlpha(word)))) \
-        .distinct() \
-        .filter(lambda (fileName, word): word != "") \
-        .map(lambda (fileName, word): (word, 1.0)) \
-        .reduceByKey(add) \
-        .filter(lambda (word, count): count > min and count < max) \
-
-def inverseDocumentFrequency(docFrequency, corpusCount):
-    return docFrequency.map(lambda (word, count): (word, math.log(corpusCount / count)))
+def inverseDocumentFrequency(docFrequency):
+    ''' Expects input RDD of the format (word, count) '''
+    docFrequency.cache()
+    corpusCount = docFrequency.count()
+    idf = docFrequency.mapValues(lambda count: math.log(corpusCount / count))
+    docFrequency.unpersist()
+    return idf
 
 def TFIDF(termFreqRdd, idfRdd):
     return termFreqRdd.join(idfRdd) \
-        .mapValues(lambda (tf, idf): tf * idf)
+        .mapValues(lambda tfidf: tfidf[0] * tfidf[1])
 
-def getEmbeddings(data, labels):
-    return None
+def TFIDFFormat(data):
+    tfRdd = termFrequency(data)
+    dfRdd = documentFrequency(data)
+    idfRdd = inverseDocumentFrequency(dfRdd)
+    return TFIDF(tfRdd, idfRdd)
+
+def doc2VecFormat(corpus, labels):
+    return [[corpus[i], labels[i]] for i in range(len(corpus))]        
+
+def getEmbeddings(data, labels, sc):
+    dataRdd = parallelizeData(data, sc).cache()
+    bow = bagOfWordsFormat(dataRdd).collect()
+    tfidf = TFIDFFormat(dataRdd).collect()
+    doc2Vec = doc2VecFormat(data, labels)
+    dataRdd.unpersist()
+    return bow, tfidf, doc2Vec

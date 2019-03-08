@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 import pickle
 
 from gensim.corpora.dictionary import Dictionary

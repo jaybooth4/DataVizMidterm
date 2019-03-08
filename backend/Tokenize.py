@@ -38,12 +38,15 @@ class NLTKPreprocess(Preprocess):
         for stopWord in stopWords:
             self.stop.add(stopWord)
 
-    def filterWords(self, word):
+    def filterWord(self, word):
         return word not in self.stop and word.isalpha()
+
+    def convertWord(self, word):
+        return word.lower()
 
     def tokenize(self, doc):
         words = [word for sentence in sent_tokenize(doc) for word in word_tokenize(sentence)]
-        return(list(filter(lambda word: self.filterWords(word), words)))
+        return list(map(self.convertWord, filter(self.filterWord, words)))
 
 
 # Preprocessor using Spacy

@@ -34,7 +34,7 @@ def readData(subset="train", textOnly=True):
         return fetch_20newsgroups(subset=subset, download_if_missing=True)
 
 
-def preprocess(tokenizerType, size, sc, save=False, ngram=False):
+def preprocess(tokenizerType, size, sc, ngram=False, save=False):
     ''' Returns corpus list of lists of tokens + list with labels '''
     rawData = readData()
     corpusRdd = parallelizeData(rawData.data, sc, size)
@@ -43,6 +43,8 @@ def preprocess(tokenizerType, size, sc, save=False, ngram=False):
     cleanCorpus = removeOutliers(tokenizedCorpus).collect()
     tokenizedCorpus.unpersist()
     labels = rawData.target[:size]
+    if ngram:
+        cleanCorpus = convertNGram(cleanCorpus)
     if save:
         saveData([cleanCorpus, labels], "preprocess")
     return cleanCorpus, labels

@@ -3,12 +3,12 @@ from pyspark import SparkContext
 
 
 def saveData(data, fName):
-    with open("output/" + fName + '.pkl', 'wb') as f:
+    with open("backendOutput/" + fName + '.pkl', 'wb') as f:
         pickle.dump(data, f)
 
 
 def loadData(fName):
-    with open("output/" + fName + '.pkl', 'rb') as f:
+    with open("backendOutput/" + fName + '.pkl', 'rb') as f:
         return pickle.load(f)
 
 

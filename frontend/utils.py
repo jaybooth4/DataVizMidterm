@@ -4,6 +4,6 @@
 
 import pickle
 
-def load_data(fName):
+def loadData(fName):
     with open(fName, 'rb') as f:
         return pickle.load(f)

@@ -5,6 +5,7 @@ from operator import add
 from gensim.matutils import Sparse2Corpus
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from .Util import saveData
+from gensim.models.doc2vec import TaggedDocument
 
 
 def bagOfWordsFormat(data):
@@ -23,7 +24,7 @@ def TFIDFFormat(bowRep):
 
 
 def doc2VecFormat(corpus, labels):
-    return [(corpus[i], labels[i]) for i in range(len(corpus))]
+    return [TaggedDocument(words=corpus[i], tags=[labels[i]]) for i in range(len(corpus))]
 
 
 def getEmbeddings(data, labels, save=False):

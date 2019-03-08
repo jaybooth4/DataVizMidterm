@@ -2,8 +2,8 @@ import pickle
 from pyspark import SparkContext
 
 
-def saveData(data, fName):
-    with open("backendOutput/" + fName + '.pkl', 'wb') as f:
+def saveData(data, fName, diry="backendOutput/"):
+    with open(diry + fName + '.pkl', 'wb') as f:
         pickle.dump(data, f)
 
 

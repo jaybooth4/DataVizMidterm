@@ -5,8 +5,8 @@ import pandas as pd
 import plotly.offline as offline
 import plotly.graph_objs as go
 
-from grapher import Grapher
-from utils import load_data
+# from grapher import Grapher
+from .utils import loadData
 
 # Need term_frequency_vs_importance dataframe in this format:
 # term_frequency_vs_importance_df = pd.DataFrame({
@@ -14,14 +14,15 @@ from utils import load_data
 #     'term-frequency': random_term_frequency,
 #     'importance': random_importance
 # })
-# with open('../results/term-frequency-vs-importance.pkl', 'wb') as f:
-#     pickle.dump(term_frequency_vs_importance_df, f)
-
 
 class TermFrequencyVsImportanceGrapher:
-    def graph(self, fileNameIn='../results/term-frequency-vs-importance.pkl', fileNameOut='../results/term-frequency-vs-importance.html'):
+    def graph(self, fileNameIn='backendOutput/stats.pkl', fileNameOut='results/term-frequency-vs-importance.html'):
 
-        term_frequency_vs_importance_df = load_data(fileNameIn)
+        _, _, tf, idf = loadData(fileNameIn)
+
+        term_frequency_df = pd.DataFrame(tf, columns=['term', 'term-frequency'])
+        idf_frequency_df = pd.DataFrame(idf, columns=['term', 'importance'])
+        term_frequency_vs_importance_df = pd.merge(term_frequency_df, idf_frequency_df, on='term', how='inner')
 
         trace = go.Scatter(
             x=term_frequency_vs_importance_df['term-frequency'],
@@ -38,13 +39,3 @@ class TermFrequencyVsImportanceGrapher:
         fig = go.Figure(data=[trace], layout=layout)
 
         offline.plot(fig, filename=fileNameOut)
-
-
-def main():
-    grapher = TermFrequencyVsImportanceGrapher()
-    grapher.graph()
-
-
-if __name__ == "__main__":
-    # execute only if run as a script
-    main()

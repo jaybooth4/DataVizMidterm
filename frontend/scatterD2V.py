@@ -1,4 +1,9 @@
-def scatterD2V(d2v_model, docLabels, d2vSize)
+import plotly.plotly as py
+import plotly.offline as offline
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import plotly.graph_objs as go
+
+def scatterD2V(d2v_model, docLabels, d2vSize):
     d2v_model = gensim.models.doc2vec.Doc2Vec.load('doc2vec.model')
     #put vector representations into an array
     vecArray = np.zeros(shape=(len(docLabels),d2vSize))

@@ -14,11 +14,11 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics import adjusted_rand_score
 
 
-def trainLDA(docRep, dictionary, save=False):
+def trainLDA(docRep, dictionary, save=False, name='ldamodel'):
     ''' Function to train and return an ldamodel. Expects a sparse matrix as input '''
     ldamodel = LdaModel(Sparse2Corpus(docRep), num_topics=20, id2word=dictionary)
     if save:
-        tempFile = datapath("../results/ldaModel")
+        tempFile = "../results/" + name;
         ldamodel.save(tempFile) # To load the model use: lda = LdaModel.load(temp_file)
     return ldamodel
 
@@ -58,4 +58,3 @@ def pickleData(data, fName):
 
 def loadData(fName):
     with open("../results/" + fName + '.pkl', 'rb') as f:
-        return pickle.load(f)

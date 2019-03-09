@@ -39,7 +39,7 @@ class LDAGrapher:
     
     def graphPyLDAvis(self):
         output_file = self.outPrefix + '-pyLDAvis.html'
-        subCorpus = sample(self.corpus, len(self.corpus)/4)
+        subCorpus = sample(self.corpus, self.corpus)
         p = pyLDAvis.gensim.prepare(self.ldamodel, subCorpus, self.dictionary)
         pyLDAvis.save_html(p, output_file)
 

@@ -9,7 +9,7 @@ from gensim.models import Doc2Vec, ldamulticore
 from gensim.models.tfidfmodel import TfidfModel
 from gensim.test.utils import datapath, get_tmpfile
 from gensim.models.doc2vec import TaggedDocument
-from sklearn.cluster import KMeans, MiniBatchKMeans
+from sklearn.cluster import MiniBatchKMeans
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics import normalized_mutual_info_score
 from .Util import saveData

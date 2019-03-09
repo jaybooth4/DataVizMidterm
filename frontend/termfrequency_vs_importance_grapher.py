@@ -17,7 +17,7 @@ from .utils import loadData
 
 class TermFrequencyVsImportanceGrapher:
 
-    def init(self, fileNameIn='backendOutput/stats.pkl'):
+    def __init__(self, fileNameIn):
         _, _, tf, idf = loadData(fileNameIn)
 
         # Create dataframe
@@ -27,8 +27,7 @@ class TermFrequencyVsImportanceGrapher:
         self.term_frequency_vs_importance_df = pd.merge(
             term_frequency_df, idf_frequency_df, on='term', how='inner')
 
-    def graph(self, fileNameOut='results/term-frequency-vs-importance.html'):
-
+    def graph(self, fileNameOut):
         trace = go.Scatter(
             x=self.term_frequency_vs_importance_df['term-frequency'],
             y=self.term_frequency_vs_importance_df['importance'],
@@ -37,8 +36,8 @@ class TermFrequencyVsImportanceGrapher:
             name='term-frequency vs. importance')
 
         layout = go.Layout(title="Term-frequency vs. Importance",
-                           xaxis={'title': 'Importance'},
-                           yaxis={'title': 'Term-frequency'}
+                           xaxis={'title': 'Term-frequency'},
+                           yaxis={'title': 'Importance'}
                            )
 
         fig = go.Figure(data=[trace], layout=layout)

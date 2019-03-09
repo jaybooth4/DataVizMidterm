@@ -74,7 +74,7 @@ class SpacyPreprocess(Preprocess):
 def tokenizerFactory(tokenizerType, ngramCount=1, minDf=1, maxDf=.5):
     if tokenizerType == "NLTK":
         return NLTKPreprocess(ngramCount, minDf, maxDf)
-    elif tokenizerType == "SPACY":
+    elif tokenizerType == "Spacy":
         return SpacyPreprocess(ngramCount, minDf, maxDf)
     else:
         raise NameError("Unsupported tokenizer type.")

@@ -12,12 +12,12 @@ import numpy as np
 
 
 def main():
-    # sc = createSparkContext()
-    # corpus, labels = preprocess("NLTK", 100, sc, save=True)
-    corpus, labels = loadData("preprocess")
-    # size, charSize, tf, idf = getStats(corpus, sc, save=True)
+    sc = createSparkContext()
+    corpus, labels = preprocess("Spacy", 100, sc, save=True)
+    # corpus, labels = loadData("preprocess")
+    size, charSize, tf, idf = getStats(corpus, sc, save=True)
     # bow, tfidf, doc2VecFormat, id2word = getEmbeddings(corpus, labels, save=True)
-    bow, tfidf, doc2VecFormat, id2word = loadData("embeddings")
+    # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings")
     # ldaModel = trainLDA(bow, id2word, save=True)
     # Doc2VecModel = trainDoc2Vec(doc2VecFormat, save=True)
     # kmeansLabels, nmi = clusterData(bow, labels, save=True)
@@ -27,7 +27,7 @@ def main():
     # Visualizations
     # graphTFVsImp()
 
-    graphKMeansClusters(bow, labels, True)
+    # graphKMeansClusters(bow, labels, True)
     
 
 if __name__ == "__main__":

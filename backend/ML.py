@@ -13,35 +13,35 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics import normalized_mutual_info_score
 from .Util import saveData
 
-def trainLDA(docRep, dictionary, save=False, name='ldamodel'):
+def trainLDA(docRep, dictionary, save=False, name=""):
     ''' Function to train and return an ldamodel. Expects a sparse matrix as input '''
     ldamodel = LdaModel(Sparse2Corpus(docRep, documents_columns=False),
                         num_topics=20, id2word=dictionary)
     if save:
-        saveData(ldamodel, name)
+        saveData(ldamodel, 'ldamodel-' + name)
     return ldamodel
 
 
-def trainDoc2Vec(data, save=False, name='doc2vec'):
+def trainDoc2Vec(data, save=False, name=""):
     ''' Train a Doc2Vec model, expects [(tokens, label)] '''
     doc2VecModel = Doc2Vec()
     doc2VecModel.build_vocab(data)
     if save:
-        saveData(doc2VecModel, name)
+        saveData(doc2VecModel, 'doc2vec-' + name)
     return doc2VecModel
 
 
-def clusterData(clusterData, labels, save=False, name="kmeans"):
+def clusterData(clusterData, labels, save=False, name=""):
     ''' Run kmeans on given data '''
     kmeans = KMeans(n_clusters=20).fit(clusterData)
     if save:
-        saveData(kmeans.labels_, name)
+        saveData(kmeans.labels_, "kmeans-" + name)
     return kmeans.labels_, normalized_mutual_info_score(kmeans.labels_, labels)
 
 
-def clusterDataMiniBatch(clusterData, labels, save=False, name="kmeansmb"):
+def clusterDataMiniBatch(clusterData, labels, save=False, name=""):
     ''' Run minibatch kmeans on given data for faster performance '''
     kmeans = MiniBatchKMeans(n_clusters=20).fit(clusterData)
     if save:
-        saveData(kmeans.labels_, name)
+        saveData(kmeans.labels_, "kmeansmb-" + name)
     return kmeans.labels_, normalized_mutual_info_score(kmeans.labels_, labels)

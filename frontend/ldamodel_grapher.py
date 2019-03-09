@@ -17,7 +17,7 @@ import pyLDAvis.sklearn
 import numpy as np
 import pandas as pd
     
-from utils import load_data, pickle_data
+from .utils import loadData
 
 # Takes doc_rep_name (ie. string "bow" or "tfidf", used to name output files), ldamodel, doc_rep as corpus (NOT sparse), dictionary (gensim Dictionary type), and document_labels
 
@@ -37,9 +37,9 @@ class LDAGrapher:
 
     
     def graphPyLDAvis(self):
-        output_file = self.outPrefix + '-pyLDAvis.html';
-        p = pyLDAvis.gensim.prepare(self.ldamodel, self.corpus, self.dictionary);
-        pyLDAvis.save_html(p, output_file);
+        output_file = self.outPrefix + '-pyLDAvis.html'
+        p = pyLDAvis.gensim.prepare(self.ldamodel, self.corpus, self.dictionary)
+        pyLDAvis.save_html(p, output_file)
 
 
     def graphTSNE(self, perplexity=20):
@@ -139,12 +139,12 @@ class LDAGrapher:
         show(grid)
         
 
-def main():
+def graphLDA(embedFile='backendOutput/embeddings.pkl'):
     
-    bow, tfidf, id2word = load_data('../results/preprocess.pkl')
+    bow, tfidf, id2word = loadData(embedFile)
     
     for (docRep, docRepName) in [(bow,'bow'), (tfidf,'tfidf')]:
-        ldamodel = LdaModel.load('../results/ldamodel-' + docRepName)
+        ldamodel = LdaModel.load('backendOutput/ldamodel-' + docRepName + '.pkl')
         corpus = Sparse2Corpus(docRep, documents_columns=False)
         dictionary = Dictionary.from_corpus(corpus, id2word)
         #This could be more descriptive if we wanted
@@ -155,15 +155,10 @@ def main():
         print("Graphing t-SNE for " + docRepName + "...")
         grapher.graphTSNE(perplexity=30)
         print("Graphing pyLDAvis for " + docRepName + "...")
-#         grapher.graphPyLDAvis()
+        grapher.graphPyLDAvis()
         print("Creating word cloud for " + docRepName + "...")
         grapher.graphWordCloud()
         print("Graphing word weights for " + docRepName + "...")
         grapher.graphWordWeight()
 
     print("Done graphing!")
-
-
-if __name__ == "__main__":
-    # execute only if run as a script
-    main()

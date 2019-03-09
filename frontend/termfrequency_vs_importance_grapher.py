@@ -5,7 +5,6 @@ import pandas as pd
 import plotly.offline as offline
 import plotly.graph_objs as go
 
-# from grapher import Grapher
 from .utils import loadData
 
 # Need term_frequency_vs_importance dataframe in this format:
@@ -15,20 +14,26 @@ from .utils import loadData
 #     'importance': random_importance
 # })
 
-class TermFrequencyVsImportanceGrapher:
-    def graph(self, fileNameIn='backendOutput/stats.pkl', fileNameOut='results/term-frequency-vs-importance.html'):
 
+class TermFrequencyVsImportanceGrapher:
+
+    def init(self, fileNameIn='backendOutput/stats.pkl'):
         _, _, tf, idf = loadData(fileNameIn)
 
-        term_frequency_df = pd.DataFrame(tf, columns=['term', 'term-frequency'])
+        # Create dataframe
+        term_frequency_df = pd.DataFrame(
+            tf, columns=['term', 'term-frequency'])
         idf_frequency_df = pd.DataFrame(idf, columns=['term', 'importance'])
-        term_frequency_vs_importance_df = pd.merge(term_frequency_df, idf_frequency_df, on='term', how='inner')
+        self.term_frequency_vs_importance_df = pd.merge(
+            term_frequency_df, idf_frequency_df, on='term', how='inner')
+
+    def graph(self, fileNameOut='results/term-frequency-vs-importance.html'):
 
         trace = go.Scatter(
-            x=term_frequency_vs_importance_df['term-frequency'],
-            y=term_frequency_vs_importance_df['importance'],
+            x=self.term_frequency_vs_importance_df['term-frequency'],
+            y=self.term_frequency_vs_importance_df['importance'],
             mode='markers',
-            text=term_frequency_vs_importance_df['term'],
+            text=self.term_frequency_vs_importance_df['term'],
             name='term-frequency vs. importance')
 
         layout = go.Layout(title="Term-frequency vs. Importance",
@@ -39,3 +44,8 @@ class TermFrequencyVsImportanceGrapher:
         fig = go.Figure(data=[trace], layout=layout)
 
         offline.plot(fig, filename=fileNameOut)
+
+
+def graphTFVsImp(fileNameIn='backendOutput/stats.pkl', fileNameOut='results/term-frequency-vs-importance.html'):
+    TFVIGrapher = TermFrequencyVsImportanceGrapher(fileNameIn)
+    TFVIGrapher.graph(fileNameOut)

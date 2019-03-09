@@ -77,15 +77,62 @@ def main():
     # clusterDataMiniBatch(doc2vecRepSpacy, labels, save=True, name="spacy-doc2vec")
 
     # Visualizations
-    size, charSize, tf, idf = loadData("stats-nltk")
 
     # Box plot
-    # boxPlot(range(len(size)), size, "Document Size", fileNameOut="results/boxplot-size")
-    # boxPlot(range(len(size)), charSize, "Document Char Size", fileNameOut="results/boxplot-charsize")
-
+    # size, charSize, tf, idf = loadData("stats-nltk")
+    # boxPlot(range(len(size)), size, "Document Size", fileNameOut="results/boxplot-nltk-size")
+    # boxPlot(range(len(size)), charSize, "Document Char Size", fileNameOut="results/boxplot-nltk-charsize")
+    
+    # size, charSize, tf, idf = loadData("stats-spacy")
+    # boxPlot(range(len(size)), size, "Document Size", fileNameOut="results/boxplot-spacy-size")
+    # boxPlot(range(len(size)), charSize, "Document Char Size", fileNameOut="results/boxplot-spacy-charsize")
+    
     # TF vs Imp
     # graphTFVsImp(fileNameIn='backendOutput/stats-nltk.pkl', fileNameOut='results/term-frequency-vs-importance-nltk.html')
     # graphTFVsImp(fileNameIn='backendOutput/stats-spacy.pkl', fileNameOut='results/term-frequency-vs-importance-spacy.html')
+
+    # Kmeans
+    # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
+    
+    # KmeansBowlabels, _ = loadData("kmeans-nltk-bow")
+    # graphKMeansClusters(bow, KmeansBowlabels, True, "nltk-bow")
+    
+    # KmeansTfidflabels, _ = loadData("kmeans-nltk-tfidf")
+    # graphKMeansClusters(tfidf, KmeansTfidflabels, True, "nltk-tfidf")
+
+    # doc2vecRep = loadData("doc2vec-rep-nltk")
+    # kmeansDoc2veclabels, _ = loadData("kmeans-nltk-doc2vec")
+    # graphKMeansClusters(doc2vecRep, kmeansDoc2veclabels, False, "doc2vec-nltk")
+    
+    # ldaRepBow = loadData("ldarep-nltk-bow")
+    # kmeansLdaBowLabels, _ = loadData("kmeans-nltk-lda-bow")
+    # graphKMeansClusters(ldaRepBow, kmeansLdaBowLabels, False, "lda-nltk-bow")
+
+    # ldaRepTfidf = loadData("ldarep-nltk-tfidf")
+    # kmeansLdaTfidfLabels, _ = loadData("kmeans-nltk-lda-tfidf")
+    # graphKMeansClusters(ldaRepTfidf, kmeansLdaTfidfLabels, False, "lda-nltk-tfidf")
+
+
+    # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-spacy")
+    
+    # KmeansBowlabels, _ = loadData("kmeans-spacy-bow")
+    # graphKMeansClusters(bow, KmeansBowlabels, True, "spacy-bow")
+    
+    # KmeansTfidflabels, _ = loadData("kmeans-spacy-tfidf")
+    # graphKMeansClusters(tfidf, KmeansTfidflabels, True, "spacy-tfidf")
+
+    # doc2vecRep = loadData("doc2vec-rep-spacy")
+    # kmeansDoc2veclabels, _ = loadData("kmeans-spacy-doc2vec")
+    # graphKMeansClusters(doc2vecRep, kmeansDoc2veclabels, False, "doc2vec-spacy")
+    
+    # ldaRepBow = loadData("ldarep-spacy-bow")
+    # kmeansLdaBowLabels, _ = loadData("kmeans-spacy-lda-bow")
+    # graphKMeansClusters(ldaRepBow, kmeansLdaBowLabels, False, "lda-spacy-bow")
+
+    # ldaRepTfidf = loadData("ldarep-spacy-tfidf")
+    # kmeansLdaTfidfLabels, _ = loadData("kmeans-spacy-lda-tfidf")
+    # graphKMeansClusters(ldaRepTfidf, kmeansLdaTfidfLabels, False, "lda-spacy-tfidf")
+
     
 
     print("success")

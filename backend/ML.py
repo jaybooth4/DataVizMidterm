@@ -51,9 +51,10 @@ def trainDoc2Vec(corpus, minCount=1, vecSize=20, save=False, name=""):
 def clusterDataMiniBatch(clusterData, labels, save=False, name=""):
     ''' Run minibatch kmeans on given data for faster performance '''
     kmeans = MiniBatchKMeans(n_clusters=20).fit(clusterData)
+    nmi = normalized_mutual_info_score(kmeans.labels_, labels)
     if save:
-        saveData(kmeans.labels_, "kmeans-" + name)
-    return kmeans.labels_, normalized_mutual_info_score(kmeans.labels_, labels)
+        saveData([kmeans.labels_, nmi], "kmeans-" + name)
+    return kmeans.labels_, nmi
 
 
 def getLDARep(ldaModel, docRep, save=False, name=""):

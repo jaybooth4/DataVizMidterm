@@ -20,8 +20,8 @@ class KMeansClusteringGrapher:
         self.kmeans_labels = kmeans_labels
     
     
-    def graph(self, outFile='results/kmeans-clustering.html'):
-        output_file(outFile)
+    def graph(self, name):
+        output_file("results/kmeans-clustering-" + name + ".html")
         
         pca = PCA(n_components=2)
         df = pd.DataFrame(pca.fit_transform(self.docs_rep), columns=['PCA1', 'PCA2'])
@@ -48,14 +48,18 @@ class KMeansClusteringGrapher:
         layout = column(plot)
         show(layout)
         
-def convertToDenseRep(sparse, num_terms, num_docs):
+def convertToDenseRep(sparse, num_docs, num_terms):
     corpus = Sparse2Corpus(sparse, documents_columns=False)
-    return np.matrix.transpose(corpus2dense(corpus, num_terms=num_terms, num_docs=num_docs))
+    return np.matrix.transpose(corpus2dense(corpus, num_docs=num_docs, num_terms=num_terms))
 
-def graphKMeansClusters(data, labels, isSparse, num_terms = 5000, num_docs = 100):
-    
+def graphKMeansClusters(data, labels, isSparse, name):
+    num_docs = num_terms = 0
     if isSparse:
-        data = convertToDenseRep(data, num_terms, num_docs)
+        num_docs, num_terms = data.shape
+        data = convertToDenseRep(data, num_docs, num_terms)
+    else:
+        num_docs = len(data)
+        num_terms = len(data[0])
 
     grapher = KMeansClusteringGrapher(num_docs, num_terms, data, labels)         
-    grapher.graph()
+    grapher.graph(name)

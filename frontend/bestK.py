@@ -9,7 +9,7 @@ from sklearn.cluster import  MiniBatchKMeans
 def bestK(data, labels):
     ''' Graph the sse vs clust count '''
 
-    fileNameOut = "kmeans-analysis"
+    fileNameOut = "results/kmeans-analysis"
 
     costs = []
     K = range(1,25)

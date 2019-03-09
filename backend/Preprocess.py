@@ -42,7 +42,7 @@ def preprocess(tokenizerType, sc, size=None, ngram=False, save=False, name=""):
     tokenizedCorpus = tokenizeCorpus(corpusRdd, tokenizer).cache()
     cleanCorpus = removeOutliers(tokenizedCorpus).collect()
     tokenizedCorpus.unpersist()
-    labels = rawData.target_names[:size]
+    labels = [rawData.target_names[i] for i in rawData.target[:size]]
     if ngram:
         cleanCorpus = convertNGram(cleanCorpus)
     if save:

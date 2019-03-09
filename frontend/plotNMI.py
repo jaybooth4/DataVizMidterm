@@ -5,7 +5,7 @@ import plotly.offline as offline
 
 
 def plotNMI(nmiBow, nmiTfidf, nmidoc2vec, nmiLdaBow, nmiLdaTfidf, name):
-    fileNameOut = "nmi-comparison" + name
+    fileNameOut = "results/nmi-comparison" + name
     
     trace = go.Bar(
         x=["Bow", "TFIDF", "Doc2Vec", "LDABow", "LDATFIDF"],

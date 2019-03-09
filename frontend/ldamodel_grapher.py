@@ -8,7 +8,7 @@ from gensim.models import LdaModel
 from gensim import corpora
 from gensim.matutils import Sparse2Corpus
 from gensim.corpora import Dictionary
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 from math import pi
 import matplotlib.colors as mcolors
@@ -16,7 +16,8 @@ import pyLDAvis.gensim
 import pyLDAvis.sklearn
 import numpy as np
 import pandas as pd
-    
+from random import sample
+
 from .utils import loadData
 
 # Takes doc_rep_name (ie. string "bow" or "tfidf", used to name output files), ldamodel, doc_rep as corpus (NOT sparse), dictionary (gensim Dictionary type), and document_labels
@@ -26,8 +27,8 @@ from .utils import loadData
 # We could then pass that in to the t-SNE graph as a hover
 class LDAGrapher:
     
-    def __init__(self, doc_rep_name, corpus, dictionary, ldamodel, document_labels):
-        self.outPrefix = '../results/ldamodel-' + doc_rep_name
+    def __init__(self, doc_rep_name, corpus, dictionary, ldamodel, document_labels, name):
+        self.outPrefix = 'results/ldamodel-' + name + "-"+ doc_rep_name
       
         self.ldamodel = ldamodel
         self.corpus = corpus
@@ -38,7 +39,8 @@ class LDAGrapher:
     
     def graphPyLDAvis(self):
         output_file = self.outPrefix + '-pyLDAvis.html'
-        p = pyLDAvis.gensim.prepare(self.ldamodel, self.corpus, self.dictionary)
+        subCorpus = sample(self.corpus, len(self.corpus)/4)
+        p = pyLDAvis.gensim.prepare(self.ldamodel, subCorpus, self.dictionary)
         pyLDAvis.save_html(p, output_file)
 
 
@@ -139,18 +141,19 @@ class LDAGrapher:
         show(grid)
         
 
-def graphLDA(embedFile='backendOutput/embeddings.pkl'):
+def graphLDA(name):
     
-    bow, tfidf, id2word = loadData(embedFile)
+    embedFile = 'backendOutput/embeddings-' + name + '.pkl'
+    bow, tfidf, _, id2word = loadData(embedFile)
     
     for (docRep, docRepName) in [(bow,'bow'), (tfidf,'tfidf')]:
-        ldamodel = LdaModel.load('backendOutput/ldamodel-' + docRepName + '.pkl')
+        ldamodel = loadData('backendOutput/ldamodel-' + name + "-" + docRepName + '.pkl')
         corpus = Sparse2Corpus(docRep, documents_columns=False)
         dictionary = Dictionary.from_corpus(corpus, id2word)
         #This could be more descriptive if we wanted
-        document_labels = ["Document " + str(i) for i in range(100)]
+        document_labels = ["Document " + str(i) for i in range(len(corpus))]
         
-        grapher = LDAGrapher(docRepName, corpus, dictionary, ldamodel, document_labels) 
+        grapher = LDAGrapher(docRepName, corpus, dictionary, ldamodel, document_labels, name) 
         
         print("Graphing t-SNE for " + docRepName + "...")
         grapher.graphTSNE(perplexity=30)

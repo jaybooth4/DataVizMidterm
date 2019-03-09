@@ -33,7 +33,6 @@ class NLTKPreprocess(Preprocess):
         Preprocess.__init__(self, useNgram, minDf, maxDf)
         self.stop = set(stopwords.words('english'))
 
-
     def addStopWords(self, stopWords):
         for stopWord in stopWords:
             self.stop.add(stopWord)
@@ -46,7 +45,7 @@ class NLTKPreprocess(Preprocess):
 
     def tokenize(self, doc):
         words = [word for sentence in sent_tokenize(doc) for word in word_tokenize(sentence)]
-        return list(map(self.convertWord, filter(self.filterWord, words)))
+        return list(filter(self.filterWord, map(self.convertWord, words)))
 
 
 # Preprocessor using Spacy
@@ -55,11 +54,13 @@ class SpacyPreprocess(Preprocess):
         Preprocess.__init__(self, ngramCount, maxDf, minDf)
         self.nlp = spacy.load("en", disable=['tagger', 'parser', 'ner', 'textcat'])
         self.tokenizer = Tokenizer(self.nlp.vocab)
+        self.addStopWords(self.nlp.Defaults.stop_words)
 
     def addStopWords(self, stopWords):
         for stopWord in stopWords:
-            lexeme = self.nlp.vocab[stopWord]
-            lexeme.is_stop = True
+            for w in (stopWord, stopWord[0].upper() + stopWord[1:], stopWord.upper()):
+                lexeme = self.nlp.vocab[w]
+                lexeme.is_stop = True
             
     def filterWords(self, word):
         return word.is_alpha and not word.is_stop

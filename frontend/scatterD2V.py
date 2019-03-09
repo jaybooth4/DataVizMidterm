@@ -4,11 +4,9 @@ from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import plotly.graph_objs as go
 import numpy as np
 from sklearn.decomposition import PCA
-from .util import loadData
+from .utils import loadData
 
-def scatterD2V(docLabels, d2vSize, d2v_model=None, fileIn="backendOutput/doc2vec.pkl"):
-    if not d2v_model:
-        d2v_model = loadData(fileIn)
+def scatterD2V(docLabels, d2vSize, d2v_model, name):
     #put vector representations into an array
     vecArray = np.zeros(shape=(len(docLabels), d2vSize))
     for idx, label in enumerate(docLabels):
@@ -43,4 +41,4 @@ def scatterD2V(docLabels, d2vSize, d2v_model=None, fileIn="backendOutput/doc2vec
     )
     fig = go.Figure(data=data, layout=layout)
 
-    offline.plot(fig, filename='results/D2VCorpusScatter.html') #image = 'png',image_filename='D2VCorpusScatter',
+    offline.plot(fig, filename='results/D2VCorpusScatter' + name + '.html') #image = 'png',image_filename='D2VCorpusScatter',

@@ -4,11 +4,11 @@ from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import plotly.graph_objs as go
 import numpy as np
 from sklearn.decomposition import PCA
-from .util import loadData
+from .utils import loadData
 
-def similarD2V(doc2Comp, d2v_model, docLabels, d2vSize):
+def similarD2V(doc2Comp, d2v_model, docLabels, d2vSize, name):
     # infer a vector of the new document
-    newVec = d2v_model.infer_vector(doc2Comp[0])
+    newVec = d2v_model.infer_vector(doc2Comp)
     # find the most similar 10 documents
     mostSim = d2v_model.docvecs.most_similar([newVec], topn=10)
     # convert to numpy Arr
@@ -37,4 +37,4 @@ def similarD2V(doc2Comp, d2v_model, docLabels, d2vSize):
         showlegend=False
     )
     fig = go.Figure(data=data, layout=layout)
-    offline.plot(fig, filename='results/D2VmostSim.html')
+    offline.plot(fig, filename='results/D2VmostSim' + name + '.html')

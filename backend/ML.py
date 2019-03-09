@@ -32,7 +32,7 @@ def trainDoc2VecByTopic(data, minCount=1, vecSize=20, save=False, name=""):
                            minCount=minCount,
                            workers=4)
     if save:
-        saveData(doc2VecModel, 'doc2vec-' + name)
+        saveData(doc2VecModel, 'doc2vec-topic-' + name)
     return doc2VecModel
 
 

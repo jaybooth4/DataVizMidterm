@@ -12,12 +12,12 @@ def tokenizeCorpus(dataRdd, tokenizer):
     return dataRdd.map(lambda doc: tokenizer.tokenize(doc))
 
 
-def removeOutliers(dataRdd, minDf=2, maxDf=.5):
-    dataSize = dataRdd.count()
+def removeOutliers(dataRdd, minDf=5, maxDf=.25):
+    dataSize = dataRdd.count() * 1.0
     maxDfCount = dataSize * maxDf
     # Identify outliers present in too few or too many files
     outliers = dataRdd.map(lambda tokens: list(set(tokens)))\
-                      .flatMap(lambda tokens: [(word, 1) for word in tokens])\
+                      .flatMap(lambda tokens: [(word, 1.0) for word in tokens])\
                       .reduceByKey(add)\
                       .filter(lambda entry: entry[1] < minDf or entry[1] > maxDfCount)\
                       .map(lambda entry: entry[0])\

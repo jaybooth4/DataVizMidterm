@@ -12,14 +12,42 @@ import numpy as np
 
 
 def main():
-    sc = createSparkContext()
-    corpus, labels = preprocess("Spacy", 100, sc, save=True)
-    # corpus, labels = loadData("preprocess")
-    size, charSize, tf, idf = getStats(corpus, sc, save=True)
-    # bow, tfidf, doc2VecFormat, id2word = getEmbeddings(corpus, labels, save=True)
-    # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings")
-    # ldaModel = trainLDA(bow, id2word, save=True)
-    # Doc2VecModel = trainDoc2Vec(doc2VecFormat, save=True)
+    # sc = createSparkContext()
+
+
+    # Preprocess
+    # corpus, labels = preprocess("NLTK", sc, save=True, name="nltk")
+    # corpus, labels = loadData("preprocess-nltk")
+
+    # corpus, labels = preprocess("Spacy", sc, save=True, name="spacy")
+    # corpus, labels = loadData("preprocess-spacy")
+
+
+    # Embeddings
+    # size, charSize, tf, idf = getStats(corpus, sc, save=True, name="nltk")
+    # bow, tfidf, doc2VecFormat, id2word = getEmbeddings(corpus, labels, save=True, name="nltk")
+
+    # size, charSize, tf, idf = getStats(corpus, sc, save=True, name="spacy")
+    # bow, tfidf, doc2VecFormat, id2word = getEmbeddings(corpus, labels, save=True, name="spacy")
+
+
+    #ML
+    # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
+    # ldaModelBow = trainLDA(bow, id2word, save=True, name="nltk-bow")
+    # print("lda bow")
+    # ldaModelTfidf = trainLDA(tfidf, id2word, save=True, name="nltk-tfidf")
+    # print("lda tfidf")
+    # Doc2VecModel = trainDoc2Vec(doc2VecFormat, save=True, name="nltk")
+    # print("doc2vec")
+
+    bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-spacy")
+    ldaModelBow = trainLDA(bow, id2word, save=True, name="spacy-bow")
+    print("lda bow")
+    ldaModelTfidf = trainLDA(tfidf, id2word, save=True, name="spacy-tfidf")
+    print("lda tfidf")
+    Doc2VecModel = trainDoc2Vec(doc2VecFormat, save=True, name="spacy")
+    print("doc2vec")
+    
     # kmeansLabels, nmi = clusterData(bow, labels, save=True)
     print("success")
 

@@ -27,10 +27,10 @@ def doc2VecFormat(corpus, labels):
     return [TaggedDocument(words=corpus[i], tags=[labels[i]]) for i in range(len(corpus))]
 
 
-def getEmbeddings(data, labels, save=False):
+def getEmbeddings(data, labels, save=False, name=""):
     bow, id2word = bagOfWordsFormat(data)
     tfidf = TFIDFFormat(bow)
     doc2Vec = doc2VecFormat(data, labels)
     if save:
-        saveData([bow, tfidf, doc2Vec, id2word], "embeddings")
+        saveData([bow, tfidf, doc2Vec, id2word], "embeddings-" + name)
     return bow, tfidf, doc2Vec, id2word

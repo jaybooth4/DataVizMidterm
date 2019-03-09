@@ -27,14 +27,14 @@ def removeOutliers(dataRdd, minDf=2, maxDf=.5):
     return dataRdd.map(lambda tokens: list(filter(lambda token: token not in outliers, tokens)))
 
 
-def readData(subset="train", textOnly=True):
+def readData(subset="all", textOnly=True):
     if textOnly:
         return fetch_20newsgroups(subset=subset, remove=('headers', 'footers', 'quotes'), download_if_missing=True)
     else:
         return fetch_20newsgroups(subset=subset, download_if_missing=True)
 
 
-def preprocess(tokenizerType, size, sc, ngram=False, save=False):
+def preprocess(tokenizerType, sc, size=None, ngram=False, save=False, name=""):
     ''' Returns corpus list of lists of tokens + list with labels '''
     rawData = readData()
     corpusRdd = parallelizeData(rawData.data, sc, size)
@@ -46,5 +46,5 @@ def preprocess(tokenizerType, size, sc, ngram=False, save=False):
     if ngram:
         cleanCorpus = convertNGram(cleanCorpus)
     if save:
-        saveData([cleanCorpus, labels], "preprocess")
+        saveData([cleanCorpus, labels], "preprocess-" + name)
     return cleanCorpus, labels

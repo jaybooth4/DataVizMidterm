@@ -1,3 +1,4 @@
-This is a project for our midterm project in EECE 5642
+This is a project to analyze and visualize 20 news groups data
 
-I strongly recommend using a tool called virtualenv to manage all of your python versioning and dependencies :D
+The project is coordinated by a pipeline file, which pulls in modules in the front/backend
+to perform analysis and visualization. The results folder holds all final visualizations.

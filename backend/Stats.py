@@ -29,7 +29,7 @@ def inverseDocumentFrequency(docFrequency):
     docFrequency.unpersist()
     return idf
 
-def getStats(data, sc, save=False):
+def getStats(data, sc, save=False, name=""):
     dataRdd = parallelizeData(data, sc).cache()
     size = docSize(dataRdd).collect()
     charSize = docCharSize(dataRdd).collect()
@@ -37,5 +37,5 @@ def getStats(data, sc, save=False):
     dfRdd = documentFrequency(dataRdd)
     idf = inverseDocumentFrequency(dfRdd).collect()
     if save:
-        saveData([size, charSize, tf, idf], "stats")
+        saveData([size, charSize, tf, idf], "stats-" + name)
     return size, charSize, tf, idf

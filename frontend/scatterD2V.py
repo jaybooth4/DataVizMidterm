@@ -2,13 +2,17 @@ import plotly.plotly as py
 import plotly.offline as offline
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import plotly.graph_objs as go
+import numpy as np
+from sklearn.decomposition import PCA
+from .util import loadData
 
-def scatterD2V(d2v_model, docLabels, d2vSize):
-    d2v_model = gensim.models.doc2vec.Doc2Vec.load('doc2vec.model')
+def scatterD2V(docLabels, d2vSize, d2v_model=None, fileIn="backendOutput/doc2vec.pkl"):
+    if not d2v_model:
+        d2v_model = loadData(fileIn)
     #put vector representations into an array
-    vecArray = np.zeros(shape=(len(docLabels),d2vSize))
-    for idx, labels in enumerate(docLabels):
-        vecArray[idx]=d2v_model.docvecs[labels]
+    vecArray = np.zeros(shape=(len(docLabels), d2vSize))
+    for idx, label in enumerate(docLabels):
+        vecArray[idx]=d2v_model.docvecs[label]
     #run through PCA
     d2vPca = PCA().fit_transform(vecArray)
     #visualize
@@ -38,8 +42,5 @@ def scatterD2V(d2v_model, docLabels, d2vSize):
         showlegend= False
     )
     fig = go.Figure(data=data, layout=layout)
-    #iplot(fig, filename='d2vScatter')
-    offline.plot(fig,auto_open=False, image = 'png', image_filename='D2VCorpusScatter',
-             output_type='file', image_width=800, image_height=600, 
-             filename='results/D2VCorpusScatter.html', validate=False)
-    return None
+
+    offline.plot(fig, filename='results/D2VCorpusScatter.html') #image = 'png',image_filename='D2VCorpusScatter',

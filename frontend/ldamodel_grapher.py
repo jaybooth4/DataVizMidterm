@@ -124,7 +124,7 @@ class LDAGrapher:
                                           columns=['word', 'weight'])
 
             plot = figure(x_range=list(topic_words_df['word'].unique()),
-                          y_range=(0,1),
+#                           y_range=(0,1),
                           plot_width=250,
                           plot_height=250,
                          title="Topic " + str(topic_number))

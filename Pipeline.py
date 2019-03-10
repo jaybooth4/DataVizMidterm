@@ -167,10 +167,10 @@ def main():
 
 
     # Other training of D2Vec, shows similarity of topics to each other
-    corpus, labels = loadData("preprocess-nltk")
-    bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
-    topicModel = trainDoc2VecByTopic(doc2VecFormat, save=True, name="nltk")
-    similarTopics(topicModel.docvecs[0], topicModel, labels, 20, "nltk-topics")
+    # corpus, labels = loadData("preprocess-nltk")
+    # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
+    # topicModel = trainDoc2VecByTopic(doc2VecFormat, save=True, name="nltk")
+    # similarTopics(topicModel.docvecs[0], topicModel, labels, 20, "nltk-topics")
 
     # Other number of clusters
     # doc2vecRepNltk = loadData("doc2vec-rep-spacy")

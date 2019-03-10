@@ -139,15 +139,15 @@ def main():
     # graphLDA("spacy")
 
     # D2Vec
-    corpus, labels = loadData("preprocess-nltk")
-    doc2VecModel = loadData("doc2vec-nltk")
-    similarD2V(corpus[0], doc2VecModel, labels, 20, "nltk")
-    scatterD2V(labels, 20, doc2VecModel, "nltk")
+    # corpus, labels = loadData("preprocess-nltk")
+    # doc2VecModel = loadData("doc2vec-nltk")
+    # similarD2V(corpus[0], doc2VecModel, 20, "nltk")
+    # scatterD2V(20, doc2VecModel, "nltk")
 
-    corpus, labels = loadData("preprocess-spacy")
-    doc2VecModel = loadData("doc2vec-spacy")
-    similarD2V(corpus[0], doc2VecModel, labels, 20, "spacy")
-    scatterD2V(labels, 20, doc2VecModel, "spacy")
+    # corpus, labels = loadData("preprocess-spacy")
+    # doc2VecModel = loadData("doc2vec-spacy")
+    # similarD2V(corpus[0], doc2VecModel, 20, "spacy")
+    # scatterD2V(20, doc2VecModel, "spacy")
 
 
     # Compare kmeans results
@@ -167,10 +167,10 @@ def main():
 
 
     # Other training of D2Vec, shows similarity of topics to each other
-    # corpus, labels = loadData("preprocess-nltk")
-    # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
-    # topicModel = trainDoc2VecByTopic(doc2VecFormat, save=True, name="nltk")
-    # similarTopics(topicModel.docvecs[0], topicModel, labels, 20, "nltk-topics")
+    corpus, labels = loadData("preprocess-nltk")
+    bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
+    topicModel = trainDoc2VecByTopic(doc2VecFormat, save=True, name="nltk")
+    similarTopics(topicModel.docvecs[0], topicModel, labels, 20, "nltk-topics")
 
     # Other number of clusters
     # doc2vecRepNltk = loadData("doc2vec-rep-spacy")

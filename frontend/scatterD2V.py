@@ -6,11 +6,11 @@ import numpy as np
 from sklearn.decomposition import PCA
 from .utils import loadData
 
-def scatterD2V(docLabels, d2vSize, d2v_model, name):
+def scatterD2V(d2vSize, d2v_model, name):
     #put vector representations into an array
-    vecArray = np.zeros(shape=(len(docLabels), d2vSize))
-    for idx, label in enumerate(docLabels):
-        vecArray[idx]=d2v_model.docvecs[label]
+    vecArray = np.zeros(shape=(len(d2v_model.docvecs), d2vSize))
+    for idx in range(len(d2v_model.docvecs)):
+        vecArray[idx]=d2v_model.docvecs[idx]
     #run through PCA
     d2vPca = PCA().fit_transform(vecArray)
     #visualize
@@ -18,7 +18,7 @@ def scatterD2V(docLabels, d2vSize, d2v_model, name):
         x = d2vPca[:, 0],
         y = d2vPca[:, 1],
         mode='markers',
-        text = docLabels,
+        text = list(range(len(d2v_model.docvecs))),
         hoverinfo = 'text'
     )
     #identify the data

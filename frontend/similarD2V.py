@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 from .utils import loadData
 
-def similarD2V(doc2Comp, d2v_model, docLabels, d2vSize, name):
+def similarD2V(doc2Comp, d2v_model, d2vSize, name):
     # infer a vector of the new document
     newVec = d2v_model.infer_vector(doc2Comp)
     # find the most similar 10 documents

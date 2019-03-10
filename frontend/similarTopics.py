@@ -20,7 +20,7 @@ def similarTopics(topic, d2v_model, docLabels, d2vSize, name):
         y=simArr[:, 1]
     )]
     layout = go.Layout(
-        title=('Most Similar Documents to ' + "text 1"),
+        title=('Most Similar Topics to alt.atheism'),
         xaxis=dict(
             title='Topics',
             ticklen=5,

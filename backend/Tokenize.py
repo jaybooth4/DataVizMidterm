@@ -14,11 +14,9 @@ from spacy.tokenizer import Tokenizer
 
 # Preprocessing Base Class
 class Preprocess(metaclass=ABCMeta):
-    def __init__(self, useNgram=False, minDf=1, maxDf=.5):
-        self.useNgram = useNgram
-        self.minDf = minDf
-        self.maxDf = maxDf
-
+    def __init__(self):
+        pass
+        
     @abstractmethod
     def tokenize(self, data):
         pass

@@ -29,8 +29,8 @@ class Preprocess(metaclass=ABCMeta):
 
 # Preprocessor using NLTK
 class NLTKPreprocess(Preprocess):
-    def __init__(self, useNgram=False, minDf=1, maxDf=.5):
-        Preprocess.__init__(self, useNgram, minDf, maxDf)
+    def __init__(self):
+        Preprocess.__init__(self)
         self.stop = set(stopwords.words('english'))
 
     def addStopWords(self, stopWords):
@@ -50,11 +50,11 @@ class NLTKPreprocess(Preprocess):
 
 # Preprocessor using Spacy
 class SpacyPreprocess(Preprocess):
-    def __init__(self, ngramCount=1, minDf=1, maxDf=.5):
-        Preprocess.__init__(self, ngramCount, maxDf, minDf)
+    def __init__(self):
+        Preprocess.__init__(self)
         self.nlp = spacy.load("en", disable=['tagger', 'parser', 'ner', 'textcat'])
-        self.tokenizer = Tokenizer(self.nlp.vocab)
         self.addStopWords(self.nlp.Defaults.stop_words)
+        self.tokenizer = Tokenizer(self.nlp.vocab)
 
     def addStopWords(self, stopWords):
         for stopWord in stopWords:
@@ -72,10 +72,10 @@ class SpacyPreprocess(Preprocess):
         docTokens = self.tokenizer(doc)
         return list(map(self.convertWords, filter(self.filterWords, docTokens)))
 
-def tokenizerFactory(tokenizerType, ngramCount=1, minDf=1, maxDf=.5):
+def tokenizerFactory(tokenizerType):
     if tokenizerType == "NLTK":
-        return NLTKPreprocess(ngramCount, minDf, maxDf)
+        return NLTKPreprocess()
     elif tokenizerType == "Spacy":
-        return SpacyPreprocess(ngramCount, minDf, maxDf)
+        return SpacyPreprocess()
     else:
         raise NameError("Unsupported tokenizer type.")

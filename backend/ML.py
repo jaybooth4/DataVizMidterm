@@ -36,12 +36,12 @@ def trainDoc2VecByTopic(data, minCount=1, vecSize=20, save=False, name=""):
     return doc2VecModel
 
 
-def trainDoc2Vec(corpus, minCount=1, vecSize=20, save=False, name=""):
+def trainDoc2Vec(corpus, vecSize=25, epochs=25, save=False, name=""):
     ''' Train a Doc2Vec model, expects corpus '''
     data = [TaggedDocument(words=doc, tags=[idx]) for idx, doc in enumerate(corpus)]
     doc2VecModel = Doc2Vec(data,
                            vector_size=vecSize,
-                           minCount=minCount,
+                           epochs=epochs,
                            workers=4)
     if save:
         saveData(doc2VecModel, 'doc2vec-' + name)

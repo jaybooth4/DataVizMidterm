@@ -24,7 +24,7 @@ def main():
 
     # Preprocess
     # corpus, labels = preprocess("NLTK", sc, save=True, name="nltk")
-    # corpus, labels = loadData("preprocess-nltk")
+    corpus, labels = loadData("preprocess-nltk")
 
     # corpus, labels = preprocess("Spacy", sc, save=True, name="spacy")
     # corpus, labels = loadData("preprocess-spacy")
@@ -40,7 +40,7 @@ def main():
     # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
     # ldaModelBow = trainLDA(bow, id2word, save=True, name="nltk-bow")
     # ldaModelTfidf = trainLDA(tfidf, id2word, save=True, name="nltk-tfidf")
-    # doc2VecModel = trainDoc2Vec(corpus, save=True, name="nltk")
+    doc2VecModel = trainDoc2Vec(corpus, save=True, name="nltk")
     # ldaModelBow = loadData("ldamodel-nltk-bow")
     # ldaRepBow = getLDARep(ldaModelBow, bow, save=True, name="ldarep-nltk-bow")
     # ldaModelTfidf = loadData("ldamodel-nltk-tfidf")
@@ -141,8 +141,8 @@ def main():
     # D2Vec
     corpus, labels = loadData("preprocess-nltk")
     doc2VecModel = loadData("doc2vec-nltk")
-    similarD2V(corpus[0], doc2VecModel, 20, "nltk")
-    scatterD2V(20, doc2VecModel, "nltk")
+    similarD2V(corpus[0], doc2VecModel, 25, "nltk")
+    scatterD2V(25, doc2VecModel, "nltk")
 
     # corpus, labels = loadData("preprocess-spacy")
     # doc2VecModel = loadData("doc2vec-spacy")

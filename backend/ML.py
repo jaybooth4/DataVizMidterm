@@ -19,7 +19,7 @@ def trainLDA(docRep, dictionary, save=False, name=""):
     ''' Function to train and return an ldamodel. Expects a sparse matrix as input '''
     corpus = Sparse2Corpus(docRep, documents_columns=False)
     ldamodel = ldamulticore.LdaMulticore(
-        corpus, num_topics=20, id2word=dictionary, workers=4)
+        corpus, num_topics=20, id2word=dictionary, workers=4, passes=4)
     if save:
         saveData(ldamodel, 'ldamodel-' + name)
     return ldamodel

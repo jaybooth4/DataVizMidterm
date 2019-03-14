@@ -24,7 +24,7 @@ def main():
 
     # Preprocess
     # corpus, labels = preprocess("NLTK", sc, save=True, name="nltk")
-    corpus, labels = loadData("preprocess-nltk")
+    # corpus, labels = loadData("preprocess-nltk")
 
     # corpus, labels = preprocess("Spacy", sc, save=True, name="spacy")
     # corpus, labels = loadData("preprocess-spacy")
@@ -37,16 +37,16 @@ def main():
     # bow, tfidf, doc2VecFormat, id2word = getEmbeddings(corpus, labels, save=True, name="spacy")
 
     # Train models
-    bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
-    ldaModelBow = trainLDA(bow, id2word, save=True, name="nltk-bow")
-    ldaModelTfidf = trainLDA(tfidf, id2word, save=True, name="nltk-tfidf")
+    # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
+    # ldaModelBow = trainLDA(bow, id2word, save=True, name="nltk-bow")
+    # ldaModelTfidf = trainLDA(tfidf, id2word, save=True, name="nltk-tfidf")
     # doc2VecModel = trainDoc2Vec(corpus, save=True, name="nltk")
-    ldaModelBow = loadData("ldamodel-nltk-bow")
-    ldaRepBow = getLDARep(ldaModelBow, bow, save=True, name="ldarep-nltk-bow")
-    ldaModelTfidf = loadData("ldamodel-nltk-tfidf")
-    ldaReptfidf = getLDARep(ldaModelTfidf, tfidf, save=True, name="ldarep-nltk-tfidf")
-    # doc2VecModel = loadData("doc2vec-nltk")
-    # doc2vecRep = getDoc2VecRep(doc2VecModel, save=True, name="doc2vec-rep-nltk")
+    # ldaModelBow = loadData("ldamodel-nltk-bow")
+    # ldaRepBow = getLDARep(ldaModelBow, bow, save=True, name="ldarep-nltk-bow")
+    # ldaModelTfidf = loadData("ldamodel-nltk-tfidf")
+    # ldaRepNltkTfidf = getLDARep(ldaModelTfidf, tfidf, save=True, name="ldarep-nltk-tfidf")
+    doc2VecModel = loadData("doc2vec-nltk")
+    doc2vecRep = getDoc2VecRep(doc2VecModel, save=True, name="doc2vec-rep-nltk")
 
     # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-spacy")
     # ldaModelBow = trainLDA(bow, id2word, save=True, name="spacy-bow")
@@ -60,14 +60,14 @@ def main():
     # doc2vecRep = getDoc2VecRep(doc2VecModel, save=True, name="doc2vec-rep-spacy")
 
     # Kmeans
-    # doc2vecRepNltk = loadData("doc2vec-rep-nltk")
-    ldaRepNltkTfidf = loadData("ldarep-nltk-tfidf")
-    ldaRepNltkBow = loadData("ldarep-nltk-bow")
+    doc2vecRepNltk = loadData("doc2vec-rep-nltk")
+    # ldaRepNltkTfidf = loadData("ldarep-nltk-tfidf")
+    # ldaRepNltkBow = loadData("ldarep-nltk-bow")
     # clusterDataMiniBatch(bow, labels, save=True, name="nltk-bow")
     # clusterDataMiniBatch(tfidf, labels, save=True, name="nltk-tfidf")
-    clusterDataMiniBatch(ldaRepNltkTfidf, labels, save=True, name="nltk-lda-tfidf")
-    clusterDataMiniBatch(ldaRepNltkBow, labels, save=True, name="nltk-lda-bow")
-    # clusterDataMiniBatch(doc2vecRepNltk, labels, save=True, name="nltk-doc2vec")
+    # clusterDataMiniBatch(ldaRepNltkTfidf, labels, save=True, name="nltk-lda-tfidf")
+    # clusterDataMiniBatch(ldaRepNltkBow, labels, save=True, name="nltk-lda-bow")
+    clusterDataMiniBatch(doc2vecRepNltk, labels, save=True, name="nltk-doc2vec")
 
     # doc2vecRepSpacy = loadData("doc2vec-rep-spacy")
     # ldaRepSpacyTfidf = loadData("ldarep-spacy-tfidf")
@@ -94,7 +94,7 @@ def main():
     # graphTFVsImp(fileNameIn='backendOutput/stats-spacy.pkl', fileNameOut='results/term-frequency-vs-importance-spacy.html')
 
     # Kmeans
-    # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
+    bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
 
     # KmeansBowlabels, _ = loadData("kmeans-nltk-bow")
     # graphKMeansClusters(bow, KmeansBowlabels, True, "nltk-bow")
@@ -102,17 +102,17 @@ def main():
     # KmeansTfidflabels, _ = loadData("kmeans-nltk-tfidf")
     # graphKMeansClusters(tfidf, KmeansTfidflabels, True, "nltk-tfidf")
 
-    # doc2vecRep = loadData("doc2vec-rep-nltk")
-    # kmeansDoc2veclabels, _ = loadData("kmeans-nltk-doc2vec")
-    # graphKMeansClusters(doc2vecRep, kmeansDoc2veclabels, False, "doc2vec-nltk")
+    doc2vecRep = loadData("doc2vec-rep-nltk")
+    kmeansDoc2veclabels, _ = loadData("kmeans-nltk-doc2vec")
+    graphKMeansClusters(doc2vecRep, kmeansDoc2veclabels, False, "doc2vec-nltk")
 
-    ldaRepBow = loadData("ldarep-nltk-bow")
-    kmeansLdaBowLabels, _ = loadData("kmeans-nltk-lda-bow")
-    graphKMeansClusters(ldaRepBow, kmeansLdaBowLabels, False, "lda-nltk-bow")
+    # ldaRepBow = loadData("ldarep-nltk-bow")
+    # kmeansLdaBowLabels, _ = loadData("kmeans-nltk-lda-bow")
+    # graphKMeansClusters(ldaRepBow, kmeansLdaBowLabels, False, "lda-nltk-bow")
 
-    ldaRepTfidf = loadData("ldarep-nltk-tfidf")
-    kmeansLdaTfidfLabels, _ = loadData("kmeans-nltk-lda-tfidf")
-    graphKMeansClusters(ldaRepTfidf, kmeansLdaTfidfLabels, False, "lda-nltk-tfidf")
+    # ldaRepTfidf = loadData("ldarep-nltk-tfidf")
+    # kmeansLdaTfidfLabels, _ = loadData("kmeans-nltk-lda-tfidf")
+    # graphKMeansClusters(ldaRepTfidf, kmeansLdaTfidfLabels, False, "lda-nltk-tfidf")
 
     # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-spacy")
 
@@ -135,14 +135,14 @@ def main():
     # graphKMeansClusters(ldaRepTfidf, kmeansLdaTfidfLabels, False, "lda-spacy-tfidf")
 
     # LDA
-    graphLDA("nltk")
+    # graphLDA("nltk")
     # graphLDA("spacy")
 
     # D2Vec
-    # corpus, labels = loadData("preprocess-nltk")
-    # doc2VecModel = loadData("doc2vec-nltk")
-    # similarD2V(corpus[0], doc2VecModel, 20, "nltk")
-    # scatterD2V(20, doc2VecModel, "nltk")
+    corpus, labels = loadData("preprocess-nltk")
+    doc2VecModel = loadData("doc2vec-nltk")
+    similarD2V(corpus[0], doc2VecModel, 20, "nltk")
+    scatterD2V(20, doc2VecModel, "nltk")
 
     # corpus, labels = loadData("preprocess-spacy")
     # doc2VecModel = loadData("doc2vec-spacy")

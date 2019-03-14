@@ -25,11 +25,11 @@ def trainLDA(docRep, dictionary, save=False, name=""):
     return ldamodel
 
 
-def trainDoc2VecByTopic(data, minCount=1, vecSize=20, save=False, name=""):
+def trainDoc2VecByTopic(data, vecSize=20, epochs=25, save=False, name=""):
     ''' Train a Doc2Vec model to get representations of topics, expects [(tokens, topic)] '''
     doc2VecModel = Doc2Vec(data,
                            vector_size=vecSize,
-                           minCount=minCount,
+                           epochs=epochs,
                            workers=4)
     if save:
         saveData(doc2VecModel, 'doc2vec-topic-' + name)

@@ -9,14 +9,11 @@ from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize, word_tokenize
 from spacy.tokenizer import Tokenizer
 
-# download('stopwords')
-# download('punkt')
-
 # Preprocessing Base Class
 class Preprocess(metaclass=ABCMeta):
     def __init__(self):
         pass
-        
+
     @abstractmethod
     def tokenize(self, data):
         pass
@@ -42,7 +39,8 @@ class NLTKPreprocess(Preprocess):
         return word.lower()
 
     def tokenize(self, doc):
-        words = [word for sentence in sent_tokenize(doc) for word in word_tokenize(sentence)]
+        words = [word for sentence in sent_tokenize(
+            doc) for word in word_tokenize(sentence)]
         return list(filter(self.filterWord, map(self.convertWord, words)))
 
 
@@ -50,7 +48,8 @@ class NLTKPreprocess(Preprocess):
 class SpacyPreprocess(Preprocess):
     def __init__(self):
         Preprocess.__init__(self)
-        self.nlp = spacy.load("en", disable=['tagger', 'parser', 'ner', 'textcat'])
+        self.nlp = spacy.load(
+            "en", disable=['tagger', 'parser', 'ner', 'textcat'])
         self.addStopWords(self.nlp.Defaults.stop_words)
         self.tokenizer = Tokenizer(self.nlp.vocab)
 
@@ -59,7 +58,7 @@ class SpacyPreprocess(Preprocess):
             for w in (stopWord, stopWord[0].upper() + stopWord[1:], stopWord.upper()):
                 lexeme = self.nlp.vocab[w]
                 lexeme.is_stop = True
-            
+
     def filterWords(self, word):
         return word.is_alpha and not word.is_stop
 
@@ -70,7 +69,9 @@ class SpacyPreprocess(Preprocess):
         docTokens = self.tokenizer(doc)
         return list(map(self.convertWords, filter(self.filterWords, docTokens)))
 
+
 def tokenizerFactory(tokenizerType):
+    ''' Factory to return the desired type of tokenizer '''
     if tokenizerType == "NLTK":
         return NLTKPreprocess()
     elif tokenizerType == "Spacy":

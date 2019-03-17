@@ -1,22 +1,22 @@
 from backend.Embeddings import getEmbeddings
+from backend.ML import (clusterDataMiniBatch, getDoc2VecRep, getLDARep,
+                        trainDoc2Vec, trainDoc2VecByTopic, trainLDA)
 from backend.Preprocess import preprocess
-from backend.Util import createSparkContext, loadData
-from backend.ML import trainLDA, trainDoc2Vec, clusterDataMiniBatch, getLDARep, getDoc2VecRep, trainDoc2VecByTopic
 from backend.Stats import getStats
-from frontend.termfrequency_vs_importance_grapher import graphTFVsImp
-from frontend.kmeansclustering_grapher import graphKMeansClusters
-from frontend.boxPlot import boxPlot
-from frontend.ldamodel_grapher import graphLDA
-from frontend.similarD2V import similarD2V
-from frontend.scatterD2V import scatterD2V
-from frontend.similarTopics import similarTopics
-from frontend.plotNMI import plotNMI
+from backend.Util import createSparkContext, loadData
 from frontend.bestK import bestK
-from sklearn.datasets import fetch_20newsgroups
-from gensim.matutils import Sparse2Corpus
-import argparse
-import numpy as np
-import time
+from frontend.boxPlot import boxPlot
+from frontend.kmeansclustering_grapher import graphKMeansClusters
+from frontend.ldamodel_grapher import graphLDA
+from frontend.plotNMI import plotNMI
+from frontend.scatterD2V import scatterD2V
+from frontend.similarD2V import similarD2V
+from frontend.similarTopics import similarTopics
+from frontend.termfrequency_vs_importance_grapher import graphTFVsImp
+
+# This file is able to describe a pipeline that will pull in functionality from the backend and frontend components
+# and run some set of analysis or visualizations. It is meant to be modular and able to read in saved data such as 
+# pretrained models or preprocessed data to prevent recalculation during each run.
 
 
 def main():
@@ -149,7 +149,6 @@ def main():
     # similarD2V(corpus[0], doc2VecModel, 25, "spacy")
     # scatterD2V(25, doc2VecModel, "spacy")
 
-
     # Compare kmeans results
     # _, nmiNltkBow = loadData("kmeans-nltk-bow")
     # _, nmiNltkTfidf = loadData("kmeans-nltk-tfidf")
@@ -165,7 +164,6 @@ def main():
     # _, nmiSpacyLdaTfidf = loadData("kmeans-spacy-lda-tfidf")
     # plotNMI(nmiSpacyBow, nmiSpacyTfidf, nmiSpacydoc2vec, nmiSpacyLdaBow, nmiSpacyLdaTfidf, "Spacy")
 
-
     # Other training of D2Vec, shows similarity of topics to each other
     # corpus, labels = loadData("preprocess-nltk")
     # bow, tfidf, doc2VecFormat, id2word = loadData("embeddings-nltk")
@@ -178,6 +176,7 @@ def main():
     # bestK(doc2vecRepNltk, labels)
 
     print("success")
+
 
 if __name__ == "__main__":
     # execute only if run as a script
